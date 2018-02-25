@@ -1,13 +1,13 @@
 import {postData, fetchData} from '../actions/action'
 import {combineReducers} from 'redux'
 
-const postReducer = (state =[], action) => {
-	//	console.log(action);
+const postReducer = (state ={}, action) => {
  	switch(action.type){
  		case 'POST_DATA':
- 			return {
- 				data : [...state, action.data, action.id]
- 			}
+ 			return [...state, { title: action.data , id:action.id}]
+ 		case 'UPDATE_DATA':
+ 			return state.map(data =>
+ 				(data.id === action.id)? {...data, title: action.data} : data) 			
  		default:
  			return state
  	}

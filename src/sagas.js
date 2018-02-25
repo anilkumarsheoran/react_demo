@@ -25,7 +25,7 @@ function* postSaga(action) {
 
 function* saga(){
 	try{
-		yield takeLatest( "GET_DATA", fetchSaga);
+		yield takeLatest( "GET_DATA", loadState);
 		yield takeLatest("POST_DATA", postSaga)
 	}catch(e){
 		  yield put(alert('some thing went wrong'));

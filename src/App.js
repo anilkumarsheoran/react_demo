@@ -2,43 +2,62 @@ import React, { Component } from 'react';
 import './App.css';
 import {connect} from 'react-redux';
 import reducer from './reducers/reducer'
-import {fetchData, postData} from './actions/action'
+import {fetchData, postData, updateData} from './actions/action'
+import UUID from 'uuid/v4'
 
-
-
+const max_chars = 160;
 class App extends Component {
   constructor(props){
-   
     super(props)
-    this.state = {isHidden : true}
+    this.state = {isHidden : true, hideCheck : false, chars_left :160}
     this.toggleHidden = this.toggleHidden.bind(this)
+    this.hideDiv = this.hideDiv.bind(this)
+    this.handleChange =this.handleChange.bind(this)
   }
 
   componentDidMount(dispatch) {
         this.props.fetchData()
   }
+  hideDiv(event){
+    this.setState({
+      isHidden: !this.state.isHidden
+    })
+  }
+
   toggleHidden () {
     this.setState({
       isHidden: !this.state.isHidden
     })
   }
 
+  handleChange(event) {
+
+    event.preventDefault()
+    var input = event.target.value;
+      this.setState({
+        chars_left: max_chars - input.length
+      });
+  }
+
   render(){
-    console.log("asas", this.props.display)
     return (
       <div className="App">
-          <p>Demo App</p>
-         
-         
-      
-        <div>{ Object.keys(this.props.display).length !== 0 ? Object.keys(this.props.display).map((key,index) => 
-            {return(<input type='text' style={divStyle} key={key}  defaultValue={this.props.display[key].title} onBlur={(e)=> this.props.onBlurInput(e.target.value)}/>)}) : null}</div>
-      
-        <input type='button' value='ADD DATA' onClick={this.toggleHidden}     />
-        {!this.state.isHidden &&  <div style={{border:'1px solid #333', width:"200px", height:"300px",display: 'inline-table'}}>
-            <p>Please Enter the Data you want to post</p>
-            <input type='text'   onBlur = {(e) => this.props.onBlurInput(e.target.value)} />
-          </div>}
+          <p>Demo App</p> 
+
+
+
+        {Object.keys(this.props.newData).length ? Object.keys(this.props.newData).map((key)=>
+          {return (<input type='text' key={UUID()} style={divStyle} 
+          
+          onBlur={(e) => this.props.onBlurInputPrevious(e.target.value,this.props.newData[key].id)}
+          defaultValue= {this.props.newData[key].title }
+          />)}) : null}
+        <div style={{position: 'absolute', top:'30px'}}>{this.state.chars_left}</div>
+        {this.state.isHidden ? <input style= {{margin:"0 auto", display:'block' }} type='button' value='ADD DATA' onClick={this.toggleHidden}     /> : null }
+        
+        { !this.state.isHidden &&  
+        <input type='text' style={divStyle} placeholder="Enter Data"  onBlur = {(e) => {this.props.onBlurInput(e.target.value, UUID()); this.hideDiv()}} />
+          }
 
       </div>
     )
@@ -46,30 +65,31 @@ class App extends Component {
 }
 
 
-
- const divStyle = {
-    border:'1px solid #333', width:"200px", height:"300px",display: 'inline-table'
-  } 
+const divStyle = {
+  border:'1px solid #333', width:"200px", height:"300px",display: 'inline-block'
+} 
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onBlurInput: (data) => {
-      dispatch(postData(data))
+    onBlurInput: (data, id) => {
+      dispatch(postData(data, id ))
+
+    },
+    onBlurInputPrevious: (data, id) => {
+      dispatch(updateData(data, id ))
     }, fetchData: () => {
       dispatch(fetchData())
     }
   }
 }
 
-
-
 const mapStateToProps=(state, ownProps)=> {
     return(
       {
         display: state.fetchReducer,
+        newData : state.postReducer
       }
     ) 
-
 }
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);

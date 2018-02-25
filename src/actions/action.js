@@ -1,11 +1,20 @@
 
-import UUID from 'uuid/v4'
+
 
 export  const postData =(data, id	) => {
 	return {
 		type: 'POST_DATA',
 		data,
-		id : UUID()
+		id 
+
+	}
+}
+
+export  const updateData =(data, id	) => {
+	return {
+		type: 'UPDATE_DATA',
+		data,
+		id 
 
 	}
 }
