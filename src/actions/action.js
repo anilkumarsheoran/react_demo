@@ -1,19 +1,19 @@
 
 
 
-export  const postData =(data, id 	) => {
+export  const postData =(data, id , data1	) => {
 	return {
 		type: 'POST_DATA',
 		data,
-		id 
+		id , data1
 	}
 }
 
-export  const updateData =(data, id	) => {
+export  const updateData =(data, id	, data1) => {
 	return {
 		type: 'UPDATE_DATA',
 		data,
-		id 
+		id , data1
 
 	}
 }

@@ -18,14 +18,11 @@ const ITEMS = [
   {title: 'user4',id: 4},
 
 ];
+	
 
-const persistedState = initialState(ITEMS)
-const initial =loadState()
 const sagaMiddleware = createSagaMiddleware()
-const store = createStore(reducer, {postReducer :initial}  , composeWithDevTools(applyMiddleware(sagaMiddleware)))
-store.subscribe(()=>{
-	saveState(store.getState());
-})
+const store = createStore(reducer, composeWithDevTools(applyMiddleware(sagaMiddleware)))
+
 
 
 sagaMiddleware.run(saga)

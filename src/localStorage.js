@@ -14,9 +14,11 @@ export const loadState =() =>{
 
 export const saveState =(state) =>{
 	try{
-		const localData = JSON.stringify(state.postReducer)
+		debugger;
+		const localData = JSON.stringify(state)
 		if(localData !== undefined){
 			localStorage.setItem('state',localData)
+			return true
 		}	
 		
 	}catch(e){

@@ -18,6 +18,7 @@ class App extends Component {
 
   componentDidMount(dispatch) {
         this.props.fetchData()
+      
   }
   hideDiv(event){
     this.setState({
@@ -40,6 +41,7 @@ class App extends Component {
   }
 
   render(){
+    debugger
     return (
       <div className="App">
         <Jumbotron style={{padding:'14px'}}><h1>Demo App</h1></Jumbotron>
@@ -47,13 +49,13 @@ class App extends Component {
         {Object.keys(this.props.newData).length ? Object.keys(this.props.newData).map((key)=>
           {return (
             <Jumbotron style={style} key={this.props.newData[key].id}>
-              <Display newData={this.props.newData[key]} onBlurInputChange={this.props.onBlurInputChange} handleChange={this.handleChange} key={this.props.newData[key].id} />
+              <Display newData={this.props.newData[key]} newProp={this.props.newData}  onBlurInputChange={ this.props.onBlurInputChange} handleChange={this.handleChange} key={this.props.newData[key].id} />
             </Jumbotron>)}) : null}
        
         {this.state.isHidden ? <input className='btn btn-primary' style= {{margin:"0 auto", display:'block' }} type='button' value='Add New Feed' onClick={this.toggleHidden}     /> : null }
         
         { !this.state.isHidden &&  
-        <div className='jumbotron' style={style} ><input  type='text' style={divStyle} placeholder="Type your Feed (Max Character Count: 160)"  onBlur = {(e) => {this.props.onBlurInput(e.target.value, UUID()); this.hideDiv()}} /></div>
+        <div className='jumbotron' style={style} ><input  type='text' style={divStyle} placeholder="Type your Feed (Max Character Count: 160)"  onBlur = {(e) => {this.props.onBlurInput(e.target.value, UUID(), this.props.newData); this.hideDiv()}} /></div>
           }
 
       </div>
@@ -62,10 +64,11 @@ class App extends Component {
 }
 
 function Display(props) {
+  debugger
     return (
       <div>
         <input type='text' key={UUID()} style={divStyle} 
-        onBlur={(e) => props.onBlurInputChange(e.target.value,props.newData.id)}
+        onBlur={(e) => props.onBlurInputChange(e.target.value,props.newData.id,props.newProp)}
        
           defaultValue= {props.newData.title }     
           />
@@ -82,16 +85,19 @@ const divStyle = {
 const style ={width:'80%', margin:'0 auto',borderRadius:'30px', marginBottom:'20px'}
 const mapDispatchToProps = (dispatch) => {
   return {
-    onBlurInput: (data, id) => {
-      dispatch(postData(data, id ))
+    onBlurInput: (data, id, data1) => {
+      dispatch(postData(data, id , data1))
 
     },
-    onBlurInputChange: (data, id) => {
-      dispatch(updateData(data, id ))
+    onBlurInputChange: (data, id, data1) => {
+      dispatch(updateData(data, id , data1 ))
 
     },
     fetchData: () => {
       dispatch(fetchData())
+    },
+    postData: () => {
+      dispatch(postData())
     }
   }
 }
