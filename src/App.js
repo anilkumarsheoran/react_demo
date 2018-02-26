@@ -42,16 +42,9 @@ class App extends Component {
   render(){
     return (
       <div className="App">
-          <p>Demo App</p> 
-
-
-
+        <p>Demo App</p> 
         {Object.keys(this.props.newData).length ? Object.keys(this.props.newData).map((key)=>
-          {return (<input type='text' key={UUID()} style={divStyle} 
-          
-          onBlur={(e) => this.props.onBlurInputPrevious(e.target.value,this.props.newData[key].id)}
-          defaultValue= {this.props.newData[key].title }
-          />)}) : null}
+          {return (<Display newData={this.props.newData[key]} onBlurInputChange={this.props.onBlurInputChange} key={this.props.newData[key].id} />)}) : null}
         <div style={{position: 'absolute', top:'30px'}}>{this.state.chars_left}</div>
         {this.state.isHidden ? <input style= {{margin:"0 auto", display:'block' }} type='button' value='ADD DATA' onClick={this.toggleHidden}     /> : null }
         
@@ -64,6 +57,19 @@ class App extends Component {
   }
 }
 
+function Display(props) {
+    return (
+      <div>
+        <input type='text' key={UUID()} style={divStyle} 
+        onBlur={(e) => props.onBlurInputChange(e.target.value,props.newData.id)}
+          defaultValue= {props.newData.title }     
+          />
+        <span>
+          {160 - props.newData.title.length}
+        </span>
+      </div>
+    )
+}
 
 const divStyle = {
   border:'1px solid #333', width:"200px", height:"300px",display: 'inline-block'
@@ -75,9 +81,11 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(postData(data, id ))
 
     },
-    onBlurInputPrevious: (data, id) => {
+    onBlurInputChange: (data, id) => {
       dispatch(updateData(data, id ))
-    }, fetchData: () => {
+
+    },
+    fetchData: () => {
       dispatch(fetchData())
     }
   }
@@ -91,5 +99,6 @@ const mapStateToProps=(state, ownProps)=> {
       }
     ) 
 }
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(App);
