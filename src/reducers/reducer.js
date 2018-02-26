@@ -16,9 +16,8 @@ const postReducer = (state ={}, action) => {
 const fetchReducer = (state ={}, action) => {
  	switch(action.type){
  		case 'GET_DATA':
- 			return {
- 				
- 			}
+ 			return  [...state, action.data]
+ 			
  		case 'DISPLAY_DATA':
  			return Object.assign({}, state, action.data)
  		

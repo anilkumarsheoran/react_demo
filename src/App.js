@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import reducer from './reducers/reducer'
 import {fetchData, postData, updateData} from './actions/action'
 import UUID from 'uuid/v4'
+import { Jumbotron } from 'react-bootstrap';
 
 const max_chars = 160;
 class App extends Component {
@@ -30,26 +31,29 @@ class App extends Component {
     })
   }
 
-  handleChange(event) {
-
-    event.preventDefault()
-    var input = event.target.value;
+  handleChange(title, id) {
+    // debugger;
+   
       this.setState({
-        chars_left: max_chars - input.length
+        chars_left: max_chars - title.length
       });
   }
 
   render(){
     return (
       <div className="App">
-        <p>Demo App</p> 
+        <Jumbotron style={{padding:'14px'}}><h1>Demo App</h1></Jumbotron>
+        {this.state.chars_left !== 160  ? <div style={{float:'left', width:'7%', position:'fixed', top:'200px'}}>Current Feed available limit : {this.state.chars_left}</div> : null}
         {Object.keys(this.props.newData).length ? Object.keys(this.props.newData).map((key)=>
-          {return (<Display newData={this.props.newData[key]} onBlurInputChange={this.props.onBlurInputChange} key={this.props.newData[key].id} />)}) : null}
-        <div style={{position: 'absolute', top:'30px'}}>{this.state.chars_left}</div>
-        {this.state.isHidden ? <input style= {{margin:"0 auto", display:'block' }} type='button' value='ADD DATA' onClick={this.toggleHidden}     /> : null }
+          {return (
+            <Jumbotron style={style} key={this.props.newData[key].id}>
+              <Display newData={this.props.newData[key]} onBlurInputChange={this.props.onBlurInputChange} handleChange={this.handleChange} key={this.props.newData[key].id} />
+            </Jumbotron>)}) : null}
+       
+        {this.state.isHidden ? <input className='btn btn-primary' style= {{margin:"0 auto", display:'block' }} type='button' value='Add New Feed' onClick={this.toggleHidden}     /> : null }
         
         { !this.state.isHidden &&  
-        <input type='text' style={divStyle} placeholder="Enter Data"  onBlur = {(e) => {this.props.onBlurInput(e.target.value, UUID()); this.hideDiv()}} />
+        <div className='jumbotron' style={style} ><input  type='text' style={divStyle} placeholder="Type your Feed (Max Character Count: 160)"  onBlur = {(e) => {this.props.onBlurInput(e.target.value, UUID()); this.hideDiv()}} /></div>
           }
 
       </div>
@@ -62,9 +66,10 @@ function Display(props) {
       <div>
         <input type='text' key={UUID()} style={divStyle} 
         onBlur={(e) => props.onBlurInputChange(e.target.value,props.newData.id)}
+       
           defaultValue= {props.newData.title }     
           />
-        <span>
+        <span style={{float:'right',marginRight:'25px'}}>
           {160 - props.newData.title.length}
         </span>
       </div>
@@ -72,9 +77,9 @@ function Display(props) {
 }
 
 const divStyle = {
-  border:'1px solid #333', width:"200px", height:"300px",display: 'inline-block'
+  width:"99%", height:"100px",display: 'inline-block'
 } 
-
+const style ={width:'80%', margin:'0 auto',borderRadius:'30px', marginBottom:'20px'}
 const mapDispatchToProps = (dispatch) => {
   return {
     onBlurInput: (data, id) => {

@@ -1,12 +1,11 @@
 
 
 
-export  const postData =(data, id	) => {
+export  const postData =(data, id 	) => {
 	return {
 		type: 'POST_DATA',
 		data,
 		id 
-
 	}
 }
 

@@ -16,9 +16,7 @@ const ITEMS = [
   {title: 'user2',id: 2},
   {title: 'user3',id: 3},
   {title: 'user4',id: 4},
-  {title: 'user5', id: 5},
-  {title: 'user6', id: 6},
-  {title: 'user7', id: 7}
+
 ];
 
 const persistedState = initialState(ITEMS)
